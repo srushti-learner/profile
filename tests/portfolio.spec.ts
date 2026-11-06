@@ -85,6 +85,7 @@ test('mobile layout, navigation and accessibility', async ({ page }) => {
   await page.getByRole('link', { name: 'About', exact: true }).click();
   await expect(page).toHaveURL(/#about$/);
   await expect(page.getByRole('heading', { name: 'An engineer. A systems thinker.' })).toBeInViewport();
+  await expect(page.locator('.about-copy')).toContainText('Outside of work, I’m a gym enthusiast and always up for a game of badminton or table tennis, or a swim. I also love travelling.');
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.goto('./');
   await mkdir(screenshotDir, { recursive: true });
@@ -116,6 +117,7 @@ test('public résumé, print action and local assets', async ({ page }) => {
   page.on('response', (response) => { if (response.status() >= 400) failures.push(response.url()); });
   await page.goto('./resume/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Srushti Borate');
+  await expect(page.locator('.resume')).not.toContainText('Outside of work');
   await expect(page.getByRole('heading', { name: 'Software Engineer · Microsoft', exact: true })).toBeVisible();
   await expect(page.locator('#resume-experience').locator('..')).toContainText('One of the founding engineers of Microsoft Discovery.');
   await expect(page.getByRole('heading', { name: 'Microsoft Discovery', exact: true })).toBeVisible();
