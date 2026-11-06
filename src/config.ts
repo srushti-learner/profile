@@ -47,7 +47,7 @@ export const siteConfig: SiteConfig = {
     company: job.company,
     title: job.role,
     dateRange: job.period,
-    bullets: [job.description, ...job.highlights.map((highlight) => `${highlight.title}: ${highlight.description}`)],
+    bullets: [job.summary ?? job.description],
   })),
   education: [{
     school: 'Indian Institute of Technology Roorkee',

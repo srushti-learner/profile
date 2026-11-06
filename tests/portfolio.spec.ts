@@ -154,12 +154,21 @@ test('template introduction, keyboard navigation, anchors and accessibility', as
     expect(await page.locator((await link.getAttribute('href'))!).count()).toBe(1);
   }
   await expect(page.getByRole('link', { name: 'Twitter' })).toHaveCount(0);
+  await expect(page.locator('#experience h3')).toHaveText(['Software Engineer', 'Software Engineering Intern']);
+  await expect(page.locator('#experience li')).toHaveText([
+    'Engineering AI and cloud products across service foundations, desktop experiences, and reliable delivery.',
+    'Worked on isolated testing for C#/.NET components using xUnit and Moq.',
+  ]);
+  await expect(page.locator('#experience')).toContainText('Jul 2024 — Present');
+  await expect(page.locator('#experience')).not.toContainText(foundingRole);
+  await expect(page.locator('#experience')).not.toContainText(/Admin APIs|four runtime targets|signed installers/);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.goto('./');
   await mkdir(screenshotDir, { recursive: true });
   await page.screenshot({ path: path.join(screenshotDir, 'devportfolio-desktop.png') });
   await page.screenshot({ path: path.join(screenshotDir, 'devportfolio-full.png'), fullPage: true });
   await page.locator('#work').screenshot({ path: path.join(screenshotDir, 'devportfolio-discovery.png'), style: '#header { visibility: hidden !important; }' });
+  await page.locator('#experience').screenshot({ path: path.join(screenshotDir, 'devportfolio-experience.png'), style: '#header { visibility: hidden !important; }' });
 });
 
 test('Discovery separates both products, personal contributions and public sources', async ({ page }) => {

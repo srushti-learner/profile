@@ -64,6 +64,7 @@ export const experience = [
     role: 'Software Engineer',
     company: 'Microsoft',
     period: 'Jul 2024 — Present',
+    summary: 'Engineering AI and cloud products across service foundations, desktop experiences, and reliable delivery.',
     description: `${profile.discoveryRole} Working across its enterprise platform and the local Microsoft Discovery App, spanning cloud engineering, API access, delivery automation, and AI developer experiences.`,
     highlights: work.map((item) => ({ title: item.title, description: item.resumeContribution })),
     type: 'Full-time',
