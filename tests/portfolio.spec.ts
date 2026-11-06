@@ -170,13 +170,15 @@ test('Discovery separates both products, personal contributions and public sourc
   const app = page.getByRole('article', { name: 'Microsoft Discovery App', exact: true });
   await expect(platform.locator('.product-context')).toContainText('Azure-based platform');
   await expect(platform.locator('.contributions li')).toHaveText([
-    'CI/CD automation, with work on securing service deliverables and aligning them with applicable security and compliance requirements', 'API authentication and authorization',
-    'Admin APIs for privileged operational access', 'MCP server exposing selected product APIs',
+    'CI/CD automation for product delivery',
+    'API authentication and authorization, with managed identity and RBAC',
+    'Controlled access to privileged Admin APIs, with cloud delivery guided by applicable security and compliance requirements',
+    'MCP server exposing selected product APIs',
   ]);
   await expect(app.locator('.product-context')).toContainText('desktop experience');
   await expect(app.locator('.contributions li')).toHaveText([
     'Worked on cross-platform delivery across four runtime targets: Windows x64, Windows ARM64, macOS Apple Silicon, and RHEL Linux.',
-    'Worked on securing app deliverables and aligning them with applicable security and compliance requirements',
+    'Contributed to secure cross-platform releases, including signed installers and update workflows, with attention to app security and compliance requirements',
     'MCP developer tooling', 'Provider-aware telemetry',
   ]);
   for (const product of [platform, app]) {
@@ -341,11 +343,12 @@ test('public photo-free résumé, print action, local assets and no page errors'
   await expect(page.locator('#resume-experience').locator('..')).toContainText(foundingRole);
   await expect(page.getByRole('heading', { name: 'Microsoft Discovery', exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Microsoft Discovery App', exact: true })).toBeVisible();
-  await expect(page.locator('.resume-highlight').first()).toContainText('Admin APIs for privileged operational access');
-  await expect(page.locator('.resume-highlight').first()).toContainText('work on securing service deliverables and aligning them with applicable security and compliance requirements');
+  await expect(page.locator('.resume-highlight').first()).toContainText('controlled access to privileged Admin APIs');
+  await expect(page.locator('.resume-highlight').first()).toContainText('API authentication and authorization with managed identity and RBAC');
+  await expect(page.locator('.resume-highlight').first()).toContainText('cloud delivery guided by applicable security and compliance requirements');
   await expect(page.locator('.resume-highlight').last()).toContainText(/provider-aware telemetry/i);
   await expect(page.locator('.resume-highlight').last()).toContainText('four runtime targets: Windows x64, Windows ARM64, macOS Apple Silicon, and RHEL Linux');
-  await expect(page.locator('.resume-highlight').last()).toContainText('work on securing app deliverables and aligning them with applicable security and compliance requirements');
+  await expect(page.locator('.resume-highlight').last()).toContainText('signed installers and release/update workflows with attention to app security and compliance requirements');
   await page.evaluate(() => { window.print = () => document.body.setAttribute('data-print-called', 'true'); });
   await page.getByRole('button', { name: 'Print / Save PDF' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-print-called', 'true');
