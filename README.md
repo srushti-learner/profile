@@ -22,9 +22,12 @@ and native case-study disclosures remain usable.
 
 GitHub and LinkedIn contact links navigate in the same tab so they do not depend
 on popup/new-tab support in an embedded preview. LinkedIn may require sign-in.
-Email links use `mailto:` and require a configured email app; some embedded
-previews cannot launch it. The email address is also shown as selectable text
-in the footer.
+Email contact uses a labelled **Copy email** button instead of launching an
+external mail app. It reports success only after the Clipboard API resolves.
+Clipboard access requires a secure context (HTTPS or localhost) and browser
+permission. On denial it shows an explicit error and the selectable address;
+when unsupported, insecure, or JavaScript-disabled, the address remains visible
+without a nonfunctional copy button. The résumé keeps the contact as plain text.
 
 ## Local development
 
@@ -74,7 +77,7 @@ npm test
 
 The browser suite checks the production site at desktop and mobile sizes,
 keyboard navigation, anchors, case studies, résumé printing, reduced motion,
-JavaScript-disabled content, dark default, theme persistence, the mobile menu,
+JavaScript-disabled content, clipboard success and fallback, dark default, theme persistence, the mobile menu,
 uncropped photo proportions, and automated accessibility. Screenshots are saved
 under `test-results/` (or `PORTFOLIO_SCREENSHOT_DIR` when set).
 

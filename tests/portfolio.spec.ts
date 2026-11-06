@@ -36,22 +36,98 @@ test('social profile clicks and keyboard activation navigate without a popup', a
   expect(popups).toEqual([]);
 });
 
-test('email click activates mailto without canceling the default action', async ({ page }) => {
+test('copy email writes actual clipboard contents and announces successful keyboard activation', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: 'http://localhost:4321' });
+  await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto('./');
-  await page.evaluate(() => {
-    document.addEventListener('click', (event) => {
-      const anchor = event.target instanceof Element ? event.target.closest('a') : null;
-      if (!anchor?.href.startsWith('mailto:')) return;
-      queueMicrotask(() => {
-        document.body.dataset.emailClicked = anchor.href;
-        document.body.dataset.emailPrevented = String(event.defaultPrevented);
-      });
-    }, { capture: true });
+  await expect(page.locator('a[href^="mailto:"]')).toHaveCount(0);
+  for (const section of ['#hero', 'footer']) {
+    const contact = page.locator(`${section} [data-email-contact]`);
+    const button = contact.getByRole('button', { name: 'Copy email', exact: true });
+    await expect(button).toBeVisible();
+    await button.focus();
+    await page.keyboard.press('Enter');
+    await expect(contact.getByRole('status')).toHaveText('Email copied.');
+    await expect(contact.getByRole('status')).toHaveAttribute('aria-live', 'polite');
+    await expect(contact.getByRole('status')).toHaveAttribute('aria-atomic', 'true');
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('srushtiborate100@gmail.com');
+    await expect(button).toBeEnabled();
+    await expect(contact.locator('[data-email-address]')).toBeVisible();
+  }
+  await page.goto('./');
+  await page.locator('#hero').getByRole('button', { name: 'Copy email', exact: true }).click();
+  await expect(page.locator('#hero-email-status')).toHaveText('Email copied.');
+  await mkdir(screenshotDir, { recursive: true });
+  await page.screenshot({ path: path.join(screenshotDir, 'devportfolio-copy-email.png') });
+});
+
+test('copy email denial shows explicit fallback without claiming success or overlapping content', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 720 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator.clipboard, 'writeText', {
+      value: () => Promise.reject(new DOMException('Clipboard access denied', 'NotAllowedError')),
+    });
   });
-  await page.locator('#hero').getByRole('link', { name: 'Email', exact: true }).click();
-  await expect(page.locator('body')).toHaveAttribute('data-email-clicked', 'mailto:srushtiborate100@gmail.com');
-  await expect(page.locator('body')).toHaveAttribute('data-email-prevented', 'false');
-  await expect(page.locator('footer')).toContainText('srushtiborate100@gmail.com');
+  await page.goto('./');
+  for (const section of ['#hero', 'footer']) {
+    const contact = page.locator(`${section} [data-email-contact]`);
+    await contact.getByRole('button', { name: 'Copy email', exact: true }).click();
+    await expect(contact.getByRole('status')).toHaveText('Could not copy automatically. Select and copy the email address below.');
+    await expect(contact.getByRole('status')).not.toContainText('Email copied.');
+    await expect(contact.locator('[data-email-address]')).toHaveText('srushtiborate100@gmail.com');
+    await expect(contact.locator('[data-email-address]')).toHaveCSS('user-select', 'all');
+    await expect(contact.getByRole('button', { name: 'Copy email', exact: true })).toBeEnabled();
+  }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  const intro = await page.locator('#hero').getByText('Building AI and cloud platforms.', { exact: true }).boundingBox();
+  const controls = await page.locator('#hero .social-links').boundingBox();
+  expect(controls!.y).toBeGreaterThanOrEqual(intro!.y + intro!.height);
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.goto('./');
+  await page.locator('#hero').getByRole('button', { name: 'Copy email', exact: true }).click();
+  await mkdir(screenshotDir, { recursive: true });
+  await page.locator('#hero').screenshot({ path: path.join(screenshotDir, 'devportfolio-copy-fallback.png') });
+});
+
+test('unsupported and insecure clipboard leave a selectable address without a dead button', async ({ browser }) => {
+  for (const reason of ['unsupported', 'insecure']) {
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    await context.addInitScript((mode) => {
+      if (mode === 'unsupported') Object.defineProperty(navigator, 'clipboard', { value: undefined });
+      else Object.defineProperty(window, 'isSecureContext', { value: false });
+    }, reason);
+    const page = await context.newPage();
+    await page.goto('http://localhost:4321/profile/');
+    await expect(page.getByRole('button', { name: 'Copy email', exact: true })).toHaveCount(0);
+    for (const section of ['#hero', 'footer']) {
+      const contact = page.locator(`${section} [data-email-contact]`);
+      await expect(contact.getByRole('status')).toHaveText('Automatic copying is unavailable here. Select and copy the address below.');
+      await expect(contact.locator('[data-email-address]')).toBeVisible();
+    }
+    await expect(page.locator('a[href^="mailto:"]')).toHaveCount(0);
+    await context.close();
+  }
+});
+
+test('copy email never reports success before the clipboard promise resolves', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator.clipboard, 'writeText', {
+      value: () => new Promise<void>((resolve) => {
+        document.addEventListener('complete-email-copy', () => resolve(), { once: true });
+      }),
+    });
+  });
+  await page.goto('./');
+  const button = page.locator('#hero').getByRole('button', { name: 'Copy email', exact: true });
+  await button.click();
+  await expect(button).toBeDisabled();
+  await expect(button).toHaveAttribute('aria-busy', 'true');
+  await expect(page.locator('#hero-email-status')).toHaveText('Copying email...');
+  await expect(page.locator('#hero-email-status')).not.toContainText('Email copied.');
+  await page.evaluate(() => document.dispatchEvent(new Event('complete-email-copy')));
+  await expect(page.locator('#hero-email-status')).toHaveText('Email copied.');
+  await expect(button).toBeEnabled();
 });
 
 test('template introduction, keyboard navigation, anchors and accessibility', async ({ page }) => {
@@ -147,6 +223,9 @@ test('dark default and readable interactive content without JavaScript', async (
   await noJsPage.goto('http://localhost:4321/profile/');
   await expect(noJsPage.locator('html')).toHaveAttribute('data-theme', 'dark');
   await expect(noJsPage.getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(noJsPage.getByRole('button', { name: 'Copy email', exact: true })).toHaveCount(0);
+  await expect(noJsPage.locator('[data-email-address]')).toHaveText(['srushtiborate100@gmail.com', 'srushtiborate100@gmail.com']);
+  await expect(noJsPage.locator('a[href^="mailto:"]')).toHaveCount(0);
   await expect(noJsPage.getByRole('button', { name: /Use light theme/ })).toHaveCount(0);
   await noJsPage.locator('#mobile-menu summary').click();
   await noJsPage.locator('#mobile-menu').getByRole('link', { name: 'Discovery', exact: true }).click();
@@ -254,6 +333,8 @@ test('public photo-free résumé, print action, local assets and no page errors'
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Srushti Borate');
   await expect(page.locator('.resume')).not.toContainText('Outside of work');
   await expect(page.locator('.resume img')).toHaveCount(0);
+  await expect(page.locator('.resume-links')).toContainText('srushtiborate100@gmail.com');
+  await expect(page.locator('a[href^="mailto:"]')).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Software Engineer · Microsoft', exact: true })).toBeVisible();
   await expect(page.locator('#resume-experience').locator('..')).toContainText(foundingRole);
   await expect(page.getByRole('heading', { name: 'Microsoft Discovery', exact: true })).toBeVisible();

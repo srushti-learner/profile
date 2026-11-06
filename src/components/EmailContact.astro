@@ -1,0 +1,44 @@
+---
+import { profile } from '../data/profile';
+interface Props { id: string }
+const { id } = Astro.props;
+---
+<div class="email-contact max-w-full" data-email-contact data-email={profile.email}>
+  <button class="inline-flex items-center gap-2 min-h-11 text-sm text-gray-700 hover:text-[var(--accent)] transition-colors disabled:opacity-60" type="button" data-copy-email aria-describedby={`${id}-status`} hidden>
+    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+      <path d="M16 8V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4"></path>
+    </svg>
+    Copy email
+  </button>
+  <p class="max-w-[260px] text-xs text-gray-600 leading-relaxed" id={`${id}-status`} data-copy-status role="status" aria-live="polite" aria-atomic="true"></p>
+  <p class="mt-2 text-xs sm:text-sm text-gray-600 break-all"><span class="select-all" data-email-address>{profile.email}</span></p>
+</div>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-email-contact]').forEach((contact) => {
+    const button = contact.querySelector<HTMLButtonElement>('[data-copy-email]');
+    const status = contact.querySelector<HTMLElement>('[data-copy-status]');
+    const email = contact.dataset.email;
+    if (!button || !status || !email) return;
+    if (!window.isSecureContext || !navigator.clipboard?.writeText) {
+      status.textContent = 'Automatic copying is unavailable here. Select and copy the address below.';
+      return;
+    }
+    button.hidden = false;
+    button.addEventListener('click', async () => {
+      button.disabled = true;
+      button.setAttribute('aria-busy', 'true');
+      status.textContent = 'Copying email...';
+      try {
+        await navigator.clipboard.writeText(email);
+        status.textContent = 'Email copied.';
+      } catch (error) {
+        console.warn('Email could not be copied.', error);
+        status.textContent = 'Could not copy automatically. Select and copy the email address below.';
+      } finally {
+        button.disabled = false;
+        button.removeAttribute('aria-busy');
+      }
+    });
+  });
+</script>
