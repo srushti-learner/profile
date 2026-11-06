@@ -52,18 +52,19 @@ keyboard navigation, anchors, case studies, résumé printing, reduced motion,
 JavaScript-disabled content, and automated accessibility. Screenshots are saved
 under `test-results/` (or `PORTFOLIO_SCREENSHOT_DIR` when set).
 
-## GitHub Pages (prepared, not automatically published)
+## GitHub Pages
 
-The site is configured for the repository path `/profile/`, with the intended
-URL `https://srushti-learner.github.io/profile/`. That URL is not evidence that
-deployment has happened.
+The public portfolio uses `https://srushti-learner.github.io/profile/`.
+GitHub Pages is configured to deploy through GitHub Actions, with HTTPS enforced.
+The workflow in `.github/workflows/pages.yml` builds and deploys changes pushed
+to `main`; it can also be run manually from the repository's Actions tab.
 
-When ready to publish:
+To publish an update:
 
-1. In the repository's **Settings → Pages**, choose **GitHub Actions** as the source.
-2. Push the reviewed changes to `main`. The Pages workflow builds and deploys
-   the static output, or run the workflow manually after the changes reach `main`.
-3. Check the workflow's deployment URL and verify the site and résumé there.
+1. Review the content and run the local checks above.
+2. Push the approved changes to `main`.
+3. Wait for the Pages workflow to succeed, then check its deployment URL and
+   verify the public site, photo, and résumé.
 
 No deployment or pull request is needed to review locally. If a custom domain
 or another host is selected, update `site` and `base` in `astro.config.mjs` and
