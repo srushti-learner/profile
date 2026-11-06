@@ -52,19 +52,35 @@ nav{display:flex;align-items:center;gap:34px;font-size:12px}
 .section-heading h2,h2{font-family:var(--serif);font-size:clamp(38px,4.2vw,60px);letter-spacing:-2px;line-height:1.1}
 .section-heading .eyebrow,.experience-layout>.eyebrow,.about-copy>.eyebrow{margin-bottom:20px}
 .section-heading>p{font-size:13px;color:var(--muted);line-height:1.8;padding-bottom:5px}
-.work-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;align-items:start}
+.build-highlight{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:20px 24px;margin-bottom:24px;border:1px solid #becbbb;border-radius:4px;background:var(--soft)}
+.build-highlight p{display:grid;gap:4px}
+.build-highlight .eyebrow{color:var(--teal);font-size:9px}
+.build-highlight p>span:last-child{font-family:var(--serif);font-size:20px;letter-spacing:-.3px}
+.build-highlight .text-link{flex-shrink:0}
+.work-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
 .work-card{border:1px solid var(--line);border-radius:5px;overflow:hidden;background:#f9f8f3;transition:transform .25s,border-color .25s}
 .work-card:hover{transform:translateY(-4px);border-color:#829e91}
 .work-art{position:relative;overflow:hidden;padding:15px 0 10px;color:#40675a;--art-fill:#e4e9dc;background:var(--art-fill);border-bottom:1px solid var(--line)}
 .art-tools{color:#6b5b4b;--art-fill:#ede6dc}
 .art-movies{color:#566970;--art-fill:#e1e7e7}
-.work-art svg{width:100%;aspect-ratio:480/260}
+.work-art svg{width:100%;height:230px}
 .art-caption{display:block;text-align:center;font-size:7px;letter-spacing:1.6px;margin-bottom:7px}
-.work-card-content{padding:24px 23px 0}
+.work-card-content{padding:28px 30px 0}
 .card-eyebrow{display:flex;justify-content:space-between;gap:8px;font-size:8px;letter-spacing:1.1px;color:var(--muted)}
 .card-eyebrow>span:last-child{font-family:var(--serif);font-size:13px;letter-spacing:0}
-.work-card h3{font-family:var(--serif);font-size:28px;letter-spacing:-.7px;line-height:1.18;margin:15px 0 13px}
-.card-description{color:var(--muted);font-size:12px;line-height:1.8;min-height:65px}
+.work-card h3{font-family:var(--serif);font-size:36px;letter-spacing:-.9px;line-height:1.18;margin:15px 0 10px}
+.card-description{color:var(--teal);font-size:14px;line-height:1.7}
+.product-context{margin-top:24px;min-height:140px}
+.product-context h4,.contributions h4{font-size:10px;font-weight:600;letter-spacing:.8px;margin-bottom:8px}
+.product-context p{font-size:13px;color:var(--muted);line-height:1.8}
+.contributions{padding-top:20px;border-top:1px solid var(--line);min-height:184px}
+.contributions ul{list-style:none;padding:0;margin:0;display:grid;gap:7px}
+.contributions li{position:relative;padding-left:17px;font-size:13px;line-height:1.7}
+.contributions li::before{content:'↗';position:absolute;left:0;color:var(--teal);font-size:11px}
+.product-references{display:flex;flex-wrap:wrap;gap:8px 25px;margin-bottom:22px;font-size:10px;color:var(--teal)}
+.product-references a{text-decoration:underline;text-underline-offset:4px}
+.product-references span{display:inline-block;margin-left:6px;transition:transform .2s}
+.product-references a:hover span{transform:translate(2px,-2px)}
 .tags{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:5px;margin:20px 0 23px}
 .tags li{padding:3px 8px;border:1px solid var(--line);border-radius:3px;font-size:9px;color:#535d54}
 .case-study{border-top:1px solid var(--line)}
@@ -149,6 +165,8 @@ details[open] .details-icon{transform:rotate(45deg)}
 .resume-row{display:flex;justify-content:space-between;gap:16px;margin-bottom:7px}
 .resume-row>span{flex-shrink:0;font-size:11px;color:var(--muted);padding-top:2px}
 .resume .project-tags{color:var(--teal);margin-top:5px}
+.resume-highlight{margin-top:10px}
+.resume-highlight h4{font-size:12px;font-weight:600;margin-bottom:3px}
 .resume-note{color:var(--muted);margin-top:32px}
 @media(min-width:1500px){.hero{padding-top:95px}.hero h1{font-size:126px}.hero-foot{margin-top:90px}}
 @media(max-width:1050px){
@@ -157,9 +175,10 @@ details[open] .details-icon{transform:rotate(45deg)}
   .hero-note{padding-right:0;gap:12px}
   .mini-mark{font-size:60px}
   .work-grid{gap:15px}
-  .work-card-content{padding:19px 16px 0}
-  .work-card h3{font-size:25px}
-  .card-description{min-height:86px}
+  .work-card-content{padding:24px 22px 0}
+  .work-card h3{font-size:30px}
+  .product-context{min-height:170px}
+  .contributions{min-height:205px}
   .experience-layout,.about-section{gap:55px}
   .contact-heading h2{font-size:6.5vw}
 }
@@ -188,12 +207,18 @@ details[open] .details-icon{transform:rotate(45deg)}
   .section-heading{display:block;margin-bottom:29px}
   .section-heading>p{font-size:12px;margin-top:18px}
   .section-heading .eyebrow{margin-bottom:16px}
+  .build-highlight{display:block;padding:18px 20px}
+  .build-highlight p>span:last-child{font-size:19px}
+  .build-highlight .text-link{margin-top:12px}
   .work-grid{grid-template-columns:1fr;gap:24px}
   .work-art{padding-top:0}
   .work-art svg{height:205px;width:100%}
   .work-card-content{padding:24px 24px 0}
-  .work-card h3{font-size:29px;max-width:310px}
-  .card-description{min-height:0;font-size:13px}
+  .work-card h3{font-size:30px}
+  .card-description{font-size:14px}
+  .product-context{min-height:0;margin-top:22px;margin-bottom:24px}
+  .contributions{min-height:0}
+  .product-references{font-size:10px;gap:8px 20px}
   .card-eyebrow{font-size:9px}
   .tags li{font-size:10px}
   summary{min-height:61px;font-size:12px}
@@ -250,6 +275,7 @@ details[open] .details-icon{transform:rotate(45deg)}
   .resume section{margin-top:16px;padding-top:12px;break-inside:avoid}
   .resume h2{font-size:9pt;margin-bottom:10px}
   .resume h3{font-size:10pt}
+  .resume-highlight h4{font-size:9pt}
   .resume p:not(.eyebrow):not(.resume-subtitle){font-size:9pt;line-height:1.5}
   .resume article+article{margin-top:13px}
   .resume-row{display:flex;gap:12px}

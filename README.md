@@ -22,6 +22,10 @@ npm run preview
 ## Content and portrait
 
 Edit `src/data/profile.ts` for experience, projects, case studies, and contact links.
+The featured Microsoft Discovery section separates public product context (linked
+Microsoft announcements and documentation) from personal engineering contributions.
+Its contribution summaries are also used by the printable résumé. Keep that
+distinction when editing; product milestones are not individual achievements.
 Intro and about copy live in `src/pages/index.astro`. The abstract `sb.` monogram
 in the about section is an intentional portrait placeholder, not a photograph.
 Replace the `.portrait-placeholder` element with an image and descriptive alt text

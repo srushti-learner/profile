@@ -39,6 +39,35 @@ test('desktop content, navigation, case studies and accessibility', async ({ pag
   await page.screenshot({ path: path.join(screenshotDir, 'portfolio-desktop.png'), fullPage: false });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.screenshot({ path: path.join(screenshotDir, 'portfolio-full.png'), fullPage: true });
+  await page.locator('#work').screenshot({ path: path.join(screenshotDir, 'portfolio-discovery.png') });
+});
+
+test('Discovery highlights separate product context from personal contributions', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('./');
+  await expect(page.locator('.hero-description')).toContainText('Microsoft Discovery');
+  await expect(page.locator('.build-highlight')).toContainText('ANNOUNCED AT MICROSOFT BUILD');
+  const platform = page.getByRole('article', { name: 'Microsoft Discovery', exact: true });
+  const app = page.getByRole('article', { name: 'Microsoft Discovery App', exact: true });
+  await expect(platform.locator('.product-context')).toContainText('Azure-based platform');
+  await expect(platform.getByRole('heading', { name: 'My contributions', exact: true })).toBeVisible();
+  await expect(platform.locator('.contributions li')).toHaveText([
+    'CI/CD automation for product delivery',
+    'API authentication and authorization',
+    'Admin APIs for privileged operational access',
+    'MCP server exposing selected product APIs',
+  ]);
+  await expect(app.locator('.product-context')).toContainText('desktop experience');
+  await expect(app.locator('.contributions li')).toHaveText([
+    'Cross-platform AI desktop delivery',
+    'MCP developer tooling',
+    'Provider-aware telemetry',
+  ]);
+  for (const product of [platform, app]) {
+    await expect(product.getByRole('link', { name: /product overview/ })).toHaveAttribute('href', 'https://learn.microsoft.com/en-us/azure/microsoft-discovery/concept-discovery-and-discovery-app');
+    await expect(product.getByRole('link', { name: /Build announcement/ })).toHaveAttribute('href', /^https:\/\/azure\.microsoft\.com\/en-us\/blog\//);
+  }
+  await expect(page.locator('main')).not.toContainText(/Satya|sole author|presented the keynote/i);
 });
 
 test('mobile layout, navigation and accessibility', async ({ page }) => {
@@ -79,6 +108,10 @@ test('public résumé, print action and local assets', async ({ page }) => {
   page.on('response', (response) => { if (response.status() >= 400) failures.push(response.url()); });
   await page.goto('./resume/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Srushti Borate');
+  await expect(page.getByRole('heading', { name: 'Microsoft Discovery', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Microsoft Discovery App', exact: true })).toBeVisible();
+  await expect(page.locator('.resume-highlight').first()).toContainText('Admin APIs for privileged operational access');
+  await expect(page.locator('.resume-highlight').last()).toContainText(/provider-aware telemetry/i);
   await page.evaluate(() => {
     window.print = () => document.body.setAttribute('data-print-called', 'true');
   });
