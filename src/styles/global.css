@@ -116,8 +116,8 @@ details[open] .details-icon{transform:rotate(45deg)}
 .project-date{font-size:10px;color:var(--muted);text-align:right;padding-top:3px}
 .github-link{margin-top:25px}
 .about-section{display:grid;grid-template-columns:.85fr 1fr;gap:100px;align-items:center;padding-top:22px;padding-bottom:105px}
-.portrait-frame{background:#dfe4d8;aspect-ratio:1/1.05;overflow:hidden;border:1px solid var(--line);border-radius:4px}
-.portrait-frame img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 35%}
+.portrait-frame{background:#dfe4d8;border:1px solid var(--line);border-radius:4px}
+.portrait-frame img{display:block;width:100%;height:auto;border-radius:3px}
 .about-copy h2{margin-bottom:25px}
 .about-copy>p:not(.eyebrow){font-size:13px;line-height:1.85;color:var(--muted);margin-bottom:16px}
 .about-copy>.about-lead{font-size:16px!important;color:var(--ink)!important}
@@ -234,7 +234,7 @@ details[open] .details-icon{transform:rotate(45deg)}
   .project-row p:not(.eyebrow){font-size:13px}
   .project-row .eyebrow{font-size:7px;letter-spacing:1px}
   .about-section{grid-template-columns:1fr;gap:35px;padding-top:0}
-  .portrait-frame{aspect-ratio:1.2;max-width:490px}
+  .portrait-frame{max-width:490px}
   .about-copy>p:not(.eyebrow){font-size:14px}
   .contact-section{padding-top:54px}
   .contact-heading{gap:10px;align-items:end}

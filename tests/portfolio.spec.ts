@@ -111,20 +111,30 @@ test('reduced motion and content without JavaScript', async ({ browser, page }) 
   await context.close();
 });
 
-test('graduation portrait loads responsively without placeholder content', async ({ page }) => {
+test('complete graduation photo retains its natural proportions on desktop and mobile', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await mkdir(screenshotDir, { recursive: true });
   for (const [label, width, height] of [['desktop', 1440, 1000], ['mobile', 390, 844]] as const) {
     await page.setViewportSize({ width, height });
     await page.goto('./#about');
-    const portrait = page.getByRole('img', { name: 'Srushti Borate at her IIT Roorkee graduation' });
+    const portrait = page.getByRole('img', { name: 'Srushti Borate at her IIT Roorkee graduation, with the campus building behind her' });
     await expect(portrait).toBeVisible();
     await expect.poll(() => portrait.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
-    await expect(portrait).toHaveAttribute('width', '600');
-    await expect(portrait).toHaveAttribute('height', '720');
+    await expect(portrait).toHaveAttribute('width', '1200');
+    await expect(portrait).toHaveAttribute('height', '1600');
     await expect(portrait).toHaveAttribute('src', /^\/profile\/_astro\//);
-    await expect(portrait).toHaveAttribute('srcset', /300w.*450w.*600w/);
-    await expect(portrait).toHaveCSS('object-fit', 'cover');
+    await expect(portrait).toHaveAttribute('srcset', /360w.*600w.*900w.*1200w/);
+    const proportions = await portrait.evaluate(async (image: HTMLImageElement) => {
+      const bounds = image.getBoundingClientRect();
+      const response = await fetch(image.currentSrc);
+      const bitmap = await createImageBitmap(await response.blob());
+      const natural = bitmap.width / bitmap.height;
+      bitmap.close();
+      return { natural, rendered: bounds.width / bounds.height };
+    });
+    expect(proportions.natural).toBeCloseTo(3 / 4, 3);
+    expect(proportions.rendered).toBeCloseTo(3 / 4, 3);
+    await expect(page.locator('.portrait-frame')).toHaveCSS('overflow', 'visible');
     await expect(page.locator('.portrait-placeholder')).toHaveCount(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     await page.locator('#about').screenshot({ path: path.join(screenshotDir, `portfolio-about-${label}.png`) });

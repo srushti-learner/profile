@@ -27,10 +27,12 @@ Microsoft announcements and documentation) from personal engineering contributio
 Its contribution summaries are also used by the printable résumé. Keep that
 distinction when editing; product milestones are not individual achievements.
 Intro and about copy live in `src/pages/index.astro`. The graduation portrait in
-`src/assets/srushti-graduation.webp` is a cropped, metadata-free copy of the
-user-provided photo. Astro generates responsive image sizes; the fixed-aspect
-`.portrait-frame` prevents layout shift. When replacing the image, strip metadata,
-update its alt text and dimensions, and check the crop on desktop and mobile.
+`src/assets/srushti-graduation.webp` is an optimized, metadata-free copy of the
+complete user-provided photo, including the campus background. Astro generates
+responsive image sizes; explicit dimensions reserve space to prevent layout shift.
+Keep the natural 3:4 proportions and automatic height on desktop and mobile:
+do not crop the asset or use a fixed-height cover treatment. When replacing the
+image, strip metadata and update its alt text and dimensions.
 The printable résumé intentionally remains photo-free.
 
 `/profile/resume/` is a public-safe résumé with a Print / Save PDF action. The
