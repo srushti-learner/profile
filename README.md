@@ -3,6 +3,13 @@
 A static, mobile-first Astro and TypeScript portfolio. No backend, paid service,
 external font request, or analytics is required.
 
+The original photo-led design uses oversized typography, a keyboard-accessible
+Discovery product switcher, native expandable case studies/projects, a modal
+navigation menu, and a light/dark theme saved locally in the browser. Motion is
+one-time or interaction-driven; reduced motion is respected and text is never
+hidden while waiting for a scroll animation. Without JavaScript, navigation and
+both Discovery products remain available and native disclosures still work.
+
 ## Local development
 
 Use Node.js 24.
@@ -49,7 +56,8 @@ npm test
 
 The browser suite checks the production site at desktop and mobile sizes,
 keyboard navigation, anchors, case studies, résumé printing, reduced motion,
-JavaScript-disabled content, and automated accessibility. Screenshots are saved
+JavaScript-disabled content, theme persistence, the menu and product switcher,
+uncropped photo proportions, and automated accessibility. Screenshots are saved
 under `test-results/` (or `PORTFOLIO_SCREENSHOT_DIR` when set).
 
 ## GitHub Pages

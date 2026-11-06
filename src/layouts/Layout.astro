@@ -16,13 +16,24 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#f5f3ed" />
+    <meta name="theme-color" content="#f2efe8" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
     <title>{title}</title>
+    <script is:inline>
+      try {
+        const preference = localStorage.getItem('portfolio-theme');
+        document.documentElement.dataset.theme = preference === 'dark' || preference === 'light'
+          ? preference
+          : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      } catch (error) {
+        if (error instanceof DOMException) console.warn('Theme preference could not be loaded.', error);
+        else throw error;
+      }
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
