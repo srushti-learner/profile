@@ -8,6 +8,21 @@ export const profile = {
   linkedin: 'https://www.linkedin.com/in/srushti-borate-b1000020a/',
 };
 
+export const skillGroups = [
+  {
+    label: 'Languages & backend',
+    items: ['C#', '.NET', 'TypeScript', 'JavaScript', 'Python', 'C++', 'REST APIs', 'Flask', 'xUnit / Moq'],
+  },
+  {
+    label: 'AI & agent tooling',
+    items: ['MCP', 'Semantic Kernel', 'LangChain', 'Multi-agent orchestration', 'Agent plugins', 'NLP', 'OpenCV'],
+  },
+  {
+    label: 'Cloud & platform',
+    items: ['Azure', 'Managed identity / RBAC', 'CI/CD', 'OpenTelemetry', 'Observability', 'Cross-platform desktop'],
+  },
+];
+
 export const work = [
   {
     number: '01',
@@ -86,6 +101,7 @@ export const projects = [
     date: 'Sep 2026',
     description: 'Explored multi-agent developer tooling in a hackathon setting. A public-safe overview; internal implementation details and metrics are omitted.',
     tags: 'AI agents · Developer tools',
+    relatedTools: ['Semantic Kernel', 'LangChain', 'Agent plugins'],
   },
   {
     title: 'Underwater robotics',

@@ -12,7 +12,7 @@ notice is retained in `LICENSE.md`; embedded Tabler icons are covered by
 
 Customizations include a dark-default charcoal/teal palette, optional light
 toggle, mobile navigation, founding-engineer highlight, Discovery case studies,
-full graduation photo and printable résumé. Tailwind CSS v4 is used with the
+full graduation photo, dedicated grouped Skills section and printable résumé. Tailwind CSS v4 is used with the
 existing Astro version. The font is a local system monospace stack.
 Dark is the default even with a light system preference or JavaScript disabled.
 An explicitly selected theme is saved under `devportfolio-theme` in local storage.
@@ -48,6 +48,10 @@ npm run preview
 ## Content and portrait
 
 Edit `src/data/profile.ts` for experience, projects, case studies, and contact links.
+Its `skillGroups` also supplies the dedicated Skills section and the résumé's
+single technical-skills block. The template's original About skill chips are
+reused there rather than repeated in About. Project `relatedTools` entries are
+labelled as related expertise, not as an unverified project implementation stack.
 The featured Microsoft Discovery section separates public product context (linked
 Microsoft announcements and documentation) from personal engineering contributions.
 Its contribution summaries are also used by the printable résumé. Keep that

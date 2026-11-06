@@ -199,6 +199,46 @@ test('Discovery separates both products, personal contributions and public sourc
   await expect(page.locator('#education')).toContainText('CGPA 8.55 / 10');
 });
 
+test('dedicated skills and related agent expertise are grouped and navigable', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('./');
+  const skills = page.locator('#skills');
+  await expect(page.getByRole('heading', { name: 'Skills', exact: true })).toHaveCount(1);
+  await expect(skills.locator('h3')).toHaveText(['Languages & backend', 'AI & agent tooling', 'Cloud & platform']);
+  const groups = [
+    ['C#', '.NET', 'TypeScript', 'JavaScript', 'Python', 'C++', 'REST APIs', 'Flask', 'xUnit / Moq'],
+    ['MCP', 'Semantic Kernel', 'LangChain', 'Multi-agent orchestration', 'Agent plugins', 'NLP', 'OpenCV'],
+    ['Azure', 'Managed identity / RBAC', 'CI/CD', 'OpenTelemetry', 'Observability', 'Cross-platform desktop'],
+  ];
+  await expect(skills.locator('ul')).toHaveCount(groups.length);
+  for (const [index, group] of groups.entries()) {
+    await expect(skills.locator('ul').nth(index).locator('li')).toHaveText(group);
+  }
+  await expect(page.locator('#about ul')).toHaveCount(0);
+  const project = page.getByRole('article', { name: 'Multi-agent tooling', exact: true });
+  await expect(project).toContainText('Sep 2026');
+  await expect(project).toContainText('Related tooling expertise: Semantic Kernel · LangChain · Agent plugins');
+  const link = page.locator('header .nav-link').filter({ hasText: /^Skills$/ });
+  await link.focus();
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/#skills$/);
+  await expect(link).toHaveAttribute('aria-current', 'location');
+  await expect(page.getByRole('navigation', { name: 'Footer navigation' }).getByRole('link', { name: 'Skills', exact: true })).toHaveAttribute('href', '#skills');
+  await mkdir(screenshotDir, { recursive: true });
+  await skills.screenshot({ path: path.join(screenshotDir, 'devportfolio-skills-desktop.png'), style: '#header { visibility: hidden !important; }' });
+  await project.screenshot({ path: path.join(screenshotDir, 'devportfolio-multi-agent.png'), style: '#header { visibility: hidden !important; }' });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator('#mobile-menu summary').click();
+  await page.locator('#mobile-menu').getByRole('link', { name: 'Skills', exact: true }).click();
+  await expect(page.locator('#mobile-menu')).not.toHaveAttribute('open');
+  await expect(page).toHaveURL(/#skills$/);
+  await expect(page.locator('#skills-title')).toBeInViewport();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await skills.screenshot({ path: path.join(screenshotDir, 'devportfolio-skills-mobile.png'), style: '#header { visibility: hidden !important; }' });
+});
+
 test('mobile layout, founding distinction, hobbies and menu', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -247,6 +287,10 @@ test('dark default and readable interactive content without JavaScript', async (
   await expect(noJsPage.getByText('The problem', { exact: true }).first()).toBeVisible();
   await expect(noJsPage.getByRole('article', { name: 'Microsoft Discovery App', exact: true })).toBeVisible();
   await expect(noJsPage.locator('#hero').getByRole('link', { name: /View résumé/ })).toHaveAttribute('href', '/profile/resume/');
+  await noJsPage.locator('#mobile-menu').getByRole('link', { name: 'Skills', exact: true }).click();
+  await expect(noJsPage).toHaveURL(/#skills$/);
+  await expect(noJsPage.getByRole('heading', { name: 'Skills', exact: true })).toBeVisible();
+  await expect(noJsPage.locator('#skills')).toContainText('Semantic Kernel');
   await context.close();
 });
 
@@ -358,6 +402,13 @@ test('public photo-free résumé, print action, local assets and no page errors'
   await expect(page.locator('.resume-highlight').last()).toContainText(/provider-aware telemetry/i);
   await expect(page.locator('.resume-highlight').last()).toContainText('four runtime targets: Windows x64, Windows ARM64, macOS Apple Silicon, and RHEL Linux');
   await expect(page.locator('.resume-highlight').last()).toContainText('signed installers and release/update workflows with attention to app security and compliance requirements');
+  await expect(page.getByRole('heading', { name: 'Technical skills', exact: true })).toHaveCount(1);
+  const resumeSkills = page.locator('#resume-skills').locator('..');
+  await expect(resumeSkills.locator('p')).toHaveCount(3);
+  for (const skill of ['Semantic Kernel', 'LangChain', 'Agent plugins', 'TypeScript', 'C++', 'OpenTelemetry']) {
+    await expect(resumeSkills).toContainText(skill);
+  }
+  await expect(page.locator('.resume')).toContainText('Related tooling expertise: Semantic Kernel · LangChain · Agent plugins');
   await page.evaluate(() => { window.print = () => document.body.setAttribute('data-print-called', 'true'); });
   await page.getByRole('button', { name: 'Print / Save PDF' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-print-called', 'true');

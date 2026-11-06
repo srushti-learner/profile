@@ -1,4 +1,4 @@
-import { profile, work, experience, projects } from './data/profile';
+import { profile, work, experience, projects, skillGroups } from './data/profile';
 
 interface Project {
   name: string;
@@ -7,6 +7,7 @@ interface Project {
   dateRange: string;
   category: string;
   link?: string;
+  relatedTools?: string[];
 }
 
 interface SiteConfig {
@@ -18,7 +19,7 @@ interface SiteConfig {
   social: { email: string; linkedin: string; github: string; twitter?: string };
   aboutMe: string;
   personalInterests: string;
-  skills: string[];
+  skills: typeof skillGroups;
   projects: Project[];
   discovery: typeof work;
   experience: { company: string; title: string; dateRange: string; bullets: string[] }[];
@@ -34,13 +35,14 @@ export const siteConfig: SiteConfig = {
   social: { email: profile.email, linkedin: profile.linkedin, github: profile.github },
   aboutMe: 'I’m Srushti, a software engineer at Microsoft and an IIT Roorkee graduate. I work on Microsoft Discovery across its enterprise platform and local agentic AI app. I’m interested in the connections: between services, between tools, and between an engineering decision and the experience it creates.',
   personalInterests: 'Outside of work, I’m a gym enthusiast and always up for a game of badminton or table tennis, or a swim. I also love travelling.',
-  skills: ['C# / .NET', 'Azure', 'API authentication & authorization', 'Managed identity / RBAC', 'CI/CD', 'MCP', 'Observability', 'Cross-platform desktop', 'Python', 'OpenCV'],
+  skills: skillGroups,
   projects: projects.map((project) => ({
     name: project.title,
     description: project.description,
     skills: project.tags.split(' · '),
     dateRange: project.date,
     category: project.category,
+    relatedTools: project.relatedTools,
   })),
   discovery: work,
   experience: experience.map((job) => ({

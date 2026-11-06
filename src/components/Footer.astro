@@ -74,6 +74,7 @@ const hasEducation = siteConfig.education && siteConfig.education.length > 0;
 
       <div class="flex flex-col md:items-end gap-4">
         <nav class="flex flex-wrap gap-x-6 gap-y-3" aria-label="Footer navigation">
+          {siteConfig.skills.length > 0 && <a href="#skills" class="text-sm text-gray-600 hover:text-gray-800 transition-colors">Skills</a>}
           <a href="#work" class="text-sm text-gray-600 hover:text-gray-800 transition-colors">Discovery</a>
           <a
             href="#about"
