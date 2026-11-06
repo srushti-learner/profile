@@ -22,7 +22,7 @@ const base = import.meta.env.BASE_URL;
         <h1 id="hero-title"><span class="intro-line">Thoughtful code.</span><span class="intro-line">Real-world <em>impact.</em></span></h1>
         <div class="hero-bottom intro-line">
           <div>
-            <p class="hero-description">Hi, I’m Srushti. I help build <strong>Microsoft Discovery</strong> — from its enterprise platform on Azure to the local, agentic AI <strong>Discovery App.</strong></p>
+            <p class="hero-description">Hi, I’m Srushti.<strong class="founding-role">{profile.discoveryRole}</strong>I help build its enterprise platform on Azure and the local, agentic AI Discovery App.</p>
             <div class="hero-actions">
               <a class="button button-dark" href="#work">Explore my work <span aria-hidden="true">↘</span></a>
               <a class="text-link" href={`${base}resume/`}>View résumé <span aria-hidden="true">↗</span></a>
@@ -40,7 +40,7 @@ const base = import.meta.env.BASE_URL;
     <section id="work" class="section container" aria-labelledby="work-title">
       <div class="section-heading" data-reveal>
         <div><p class="eyebrow">01 / FEATURED WORK AT MICROSOFT</p><h2 id="work-title">Two experiences.<br />One <em>Discovery.</em></h2></div>
-        <p>Enterprise scale and local exploration.<br />My engineering contributions across Microsoft Discovery.</p>
+        <p><strong>{profile.discoveryRole}</strong><br />My engineering work across enterprise and local experiences.</p>
       </div>
       <div class="build-highlight" data-reveal><p><span class="eyebrow">ANNOUNCED AT MICROSOFT BUILD</span><span>An enterprise platform. A complementary desktop app.</span></p><a class="text-link" href={work[1].announcement}>Read the announcement <span aria-hidden="true">↗</span></a></div>
       <div class="work-grid">

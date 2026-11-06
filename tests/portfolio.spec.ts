@@ -46,6 +46,9 @@ test('Discovery highlights separate product context from personal contributions'
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('./');
   await expect(page.locator('.hero-description')).toContainText('Microsoft Discovery');
+  await expect(page.locator('.hero-description .founding-role')).toHaveText('One of the founding engineers of Microsoft Discovery.');
+  await expect(page.locator('#work .section-heading')).toContainText('One of the founding engineers of Microsoft Discovery.');
+  await expect(page.locator('.hero .eyebrow')).toHaveText('SOFTWARE ENGINEER AT MICROSOFT');
   await expect(page.locator('.build-highlight')).toContainText('ANNOUNCED AT MICROSOFT BUILD');
   const platform = page.getByRole('article', { name: 'Microsoft Discovery', exact: true });
   const app = page.getByRole('article', { name: 'Microsoft Discovery App', exact: true });
@@ -108,6 +111,8 @@ test('public résumé, print action and local assets', async ({ page }) => {
   page.on('response', (response) => { if (response.status() >= 400) failures.push(response.url()); });
   await page.goto('./resume/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Srushti Borate');
+  await expect(page.getByRole('heading', { name: 'Software Engineer · Microsoft', exact: true })).toBeVisible();
+  await expect(page.locator('#resume-experience').locator('..')).toContainText('One of the founding engineers of Microsoft Discovery.');
   await expect(page.getByRole('heading', { name: 'Microsoft Discovery', exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Microsoft Discovery App', exact: true })).toBeVisible();
   await expect(page.locator('.resume-highlight').first()).toContainText('Admin APIs for privileged operational access');

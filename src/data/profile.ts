@@ -1,6 +1,7 @@
 export const profile = {
   name: 'Srushti Borate',
   role: 'Software engineer',
+  discoveryRole: 'One of the founding engineers of Microsoft Discovery.',
   positioning: 'Building AI and cloud platforms.',
   email: 'srushtiborate100@gmail.com',
   github: 'https://github.com/srushti-learner',
@@ -62,7 +63,7 @@ export const experience = [
     role: 'Software Engineer',
     company: 'Microsoft',
     period: 'Jul 2024 — Present',
-    description: 'Working on Microsoft Discovery’s enterprise platform and the local Microsoft Discovery App, across cloud engineering, API access, delivery automation, and AI developer experiences.',
+    description: `${profile.discoveryRole} Working across its enterprise platform and the local Microsoft Discovery App, spanning cloud engineering, API access, delivery automation, and AI developer experiences.`,
     highlights: work.map((item) => ({ title: item.title, description: item.resumeContribution })),
     type: 'Full-time',
   },

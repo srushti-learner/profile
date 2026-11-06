@@ -34,6 +34,7 @@ nav{display:flex;align-items:center;gap:34px;font-size:12px}
 .hero-bottom{display:flex;justify-content:space-between;align-items:center}
 .hero-description{max-width:490px;font-size:16px;line-height:1.8;color:var(--muted)}
 .hero-description strong{font-weight:500;color:var(--ink)}
+.hero-description .founding-role{display:block;color:var(--teal);margin-block:5px;font-weight:600}
 .hero-actions{display:flex;align-items:center;gap:28px;margin-top:27px}
 .button{display:inline-flex;align-items:center;justify-content:space-between;gap:28px;border:1px solid transparent;border-radius:3px;padding:14px 21px;font-size:12px;cursor:pointer;transition:background .2s,transform .2s}
 .button-dark{background:var(--ink);color:var(--paper)}
@@ -52,6 +53,7 @@ nav{display:flex;align-items:center;gap:34px;font-size:12px}
 .section-heading h2,h2{font-family:var(--serif);font-size:clamp(38px,4.2vw,60px);letter-spacing:-2px;line-height:1.1}
 .section-heading .eyebrow,.experience-layout>.eyebrow,.about-copy>.eyebrow{margin-bottom:20px}
 .section-heading>p{font-size:13px;color:var(--muted);line-height:1.8;padding-bottom:5px}
+.section-heading>p strong{font-weight:500;color:var(--teal)}
 .build-highlight{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:20px 24px;margin-bottom:24px;border:1px solid #becbbb;border-radius:4px;background:var(--soft)}
 .build-highlight p{display:grid;gap:4px}
 .build-highlight .eyebrow{color:var(--teal);font-size:9px}
