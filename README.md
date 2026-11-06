@@ -20,6 +20,12 @@ Motion is finite, reduced motion is respected, and text is never hidden while
 waiting for animation. Without JavaScript, navigation, both Discovery products
 and native case-study disclosures remain usable.
 
+GitHub and LinkedIn contact links navigate in the same tab so they do not depend
+on popup/new-tab support in an embedded preview. LinkedIn may require sign-in.
+Email links use `mailto:` and require a configured email app; some embedded
+previews cannot launch it. The email address is also shown as selectable text
+in the footer.
+
 ## Local development
 
 Use Node.js 24.

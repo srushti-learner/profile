@@ -7,6 +7,53 @@ const screenshotDir = process.env.PORTFOLIO_SCREENSHOT_DIR ?? 'test-results';
 const foundingRole = 'One of the founding engineers of Microsoft Discovery.';
 const photoAlt = 'Srushti Borate at her IIT Roorkee graduation, with the campus building behind her';
 
+test('social profile clicks and keyboard activation navigate without a popup', async ({ page }) => {
+  const popups: string[] = [];
+  page.on('popup', () => popups.push('Unexpected popup'));
+  const destinations = [
+    { name: 'GitHub', url: 'https://github.com/srushti-learner' },
+    { name: 'LinkedIn', url: 'https://www.linkedin.com/in/srushti-borate-b1000020a/' },
+  ];
+  for (const destination of destinations) {
+    await page.route(destination.url, (route) => route.fulfill({
+      status: 200,
+      contentType: 'text/html',
+      body: `<!doctype html><html lang="en"><title>Profile destination</title><h1>${destination.name} destination</h1></html>`,
+    }));
+    for (const section of ['#hero', 'footer']) {
+      await page.goto('./');
+      const link = page.locator(section).getByRole('link', { name: destination.name, exact: true });
+      await expect(link).not.toHaveAttribute('target');
+      if (section === '#hero') await link.click();
+      else {
+        await link.focus();
+        await page.keyboard.press('Enter');
+      }
+      await expect(page).toHaveURL(destination.url);
+      await expect(page.getByRole('heading', { name: `${destination.name} destination` })).toBeVisible();
+    }
+  }
+  expect(popups).toEqual([]);
+});
+
+test('email click activates mailto without canceling the default action', async ({ page }) => {
+  await page.goto('./');
+  await page.evaluate(() => {
+    document.addEventListener('click', (event) => {
+      const anchor = event.target instanceof Element ? event.target.closest('a') : null;
+      if (!anchor?.href.startsWith('mailto:')) return;
+      queueMicrotask(() => {
+        document.body.dataset.emailClicked = anchor.href;
+        document.body.dataset.emailPrevented = String(event.defaultPrevented);
+      });
+    }, { capture: true });
+  });
+  await page.locator('#hero').getByRole('link', { name: 'Email', exact: true }).click();
+  await expect(page.locator('body')).toHaveAttribute('data-email-clicked', 'mailto:srushtiborate100@gmail.com');
+  await expect(page.locator('body')).toHaveAttribute('data-email-prevented', 'false');
+  await expect(page.locator('footer')).toContainText('srushtiborate100@gmail.com');
+});
+
 test('template introduction, keyboard navigation, anchors and accessibility', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'light' });
