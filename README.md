@@ -26,11 +26,12 @@ The featured Microsoft Discovery section separates public product context (linke
 Microsoft announcements and documentation) from personal engineering contributions.
 Its contribution summaries are also used by the printable résumé. Keep that
 distinction when editing; product milestones are not individual achievements.
-Intro and about copy live in `src/pages/index.astro`. The abstract `sb.` monogram
-in the about section is an intentional portrait placeholder, not a photograph.
-Replace the `.portrait-placeholder` element with an image and descriptive alt text
-when a personal portrait is available; preserve the container dimensions to avoid
-layout shift.
+Intro and about copy live in `src/pages/index.astro`. The graduation portrait in
+`src/assets/srushti-graduation.webp` is a cropped, metadata-free copy of the
+user-provided photo. Astro generates responsive image sizes; the fixed-aspect
+`.portrait-frame` prevents layout shift. When replacing the image, strip metadata,
+update its alt text and dimensions, and check the crop on desktop and mobile.
+The printable résumé intentionally remains photo-free.
 
 `/profile/resume/` is a public-safe résumé with a Print / Save PDF action. The
 uploaded source résumé is deliberately not included in the repository or site.

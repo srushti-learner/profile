@@ -111,6 +111,26 @@ test('reduced motion and content without JavaScript', async ({ browser, page }) 
   await context.close();
 });
 
+test('graduation portrait loads responsively without placeholder content', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await mkdir(screenshotDir, { recursive: true });
+  for (const [label, width, height] of [['desktop', 1440, 1000], ['mobile', 390, 844]] as const) {
+    await page.setViewportSize({ width, height });
+    await page.goto('./#about');
+    const portrait = page.getByRole('img', { name: 'Srushti Borate at her IIT Roorkee graduation' });
+    await expect(portrait).toBeVisible();
+    await expect.poll(() => portrait.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
+    await expect(portrait).toHaveAttribute('width', '600');
+    await expect(portrait).toHaveAttribute('height', '720');
+    await expect(portrait).toHaveAttribute('src', /^\/profile\/_astro\//);
+    await expect(portrait).toHaveAttribute('srcset', /300w.*450w.*600w/);
+    await expect(portrait).toHaveCSS('object-fit', 'cover');
+    await expect(page.locator('.portrait-placeholder')).toHaveCount(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    await page.locator('#about').screenshot({ path: path.join(screenshotDir, `portfolio-about-${label}.png`) });
+  }
+});
+
 test('public résumé, print action and local assets', async ({ page }) => {
   const failures: string[] = [];
   page.on('pageerror', (error) => failures.push(error.message));
@@ -118,6 +138,7 @@ test('public résumé, print action and local assets', async ({ page }) => {
   await page.goto('./resume/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Srushti Borate');
   await expect(page.locator('.resume')).not.toContainText('Outside of work');
+  await expect(page.locator('.resume img')).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Software Engineer · Microsoft', exact: true })).toBeVisible();
   await expect(page.locator('#resume-experience').locator('..')).toContainText('One of the founding engineers of Microsoft Discovery.');
   await expect(page.getByRole('heading', { name: 'Microsoft Discovery', exact: true })).toBeVisible();

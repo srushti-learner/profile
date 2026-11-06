@@ -116,13 +116,8 @@ details[open] .details-icon{transform:rotate(45deg)}
 .project-date{font-size:10px;color:var(--muted);text-align:right;padding-top:3px}
 .github-link{margin-top:25px}
 .about-section{display:grid;grid-template-columns:.85fr 1fr;gap:100px;align-items:center;padding-top:22px;padding-bottom:105px}
-.portrait-placeholder{position:relative;isolation:isolate;background:#dfe4d8;aspect-ratio:1/1.05;overflow:hidden;border-radius:4px;display:flex;justify-content:center;align-items:center}
-.portrait-initials{font-family:var(--serif);font-size:clamp(110px,16vw,220px);letter-spacing:-17px;color:var(--teal);line-height:1;margin-left:-8px;margin-top:-30px}
-.portrait-initials>span{color:#8f9e7f}
-.portrait-orbit{position:absolute;width:135%;height:85%;border:1px solid #b8c5ae;border-radius:50%;z-index:-1;transform:rotate(-40deg)}
-.orbit-two{width:100%;height:130%;transform:rotate(32deg)}
-.portrait-caption{position:absolute;bottom:22px;left:24px;right:24px;display:flex;justify-content:space-between;align-items:center;font-size:8px;letter-spacing:1.5px;color:var(--teal)}
-.portrait-caption>span:last-child{font-size:26px;line-height:1}
+.portrait-frame{background:#dfe4d8;aspect-ratio:1/1.05;overflow:hidden;border:1px solid var(--line);border-radius:4px}
+.portrait-frame img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 35%}
 .about-copy h2{margin-bottom:25px}
 .about-copy>p:not(.eyebrow){font-size:13px;line-height:1.85;color:var(--muted);margin-bottom:16px}
 .about-copy>.about-lead{font-size:16px!important;color:var(--ink)!important}
@@ -239,8 +234,7 @@ details[open] .details-icon{transform:rotate(45deg)}
   .project-row p:not(.eyebrow){font-size:13px}
   .project-row .eyebrow{font-size:7px;letter-spacing:1px}
   .about-section{grid-template-columns:1fr;gap:35px;padding-top:0}
-  .portrait-placeholder{aspect-ratio:1.2;max-width:490px}
-  .portrait-initials{font-size:170px;letter-spacing:-14px}
+  .portrait-frame{aspect-ratio:1.2;max-width:490px}
   .about-copy>p:not(.eyebrow){font-size:14px}
   .contact-section{padding-top:54px}
   .contact-heading{gap:10px;align-items:end}
