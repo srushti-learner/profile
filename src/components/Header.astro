@@ -1,0 +1,76 @@
+---
+import { siteConfig } from '../config';
+const links = [
+  { href: '#about', label: 'About' },
+  { href: '#work', label: 'Discovery' },
+  ...(siteConfig.projects.length ? [{ href: '#projects', label: 'Projects' }] : []),
+  ...(siteConfig.experience.length ? [{ href: '#experience', label: 'Experience' }] : []),
+  ...(siteConfig.education.length ? [{ href: '#education', label: 'Education' }] : []),
+  { href: `${import.meta.env.BASE_URL}resume/`, label: 'Résumé' },
+];
+---
+<header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/90 backdrop-blur-sm border-b border-gray-200">
+  <nav class="max-w-7xl mx-auto px-6 md:px-8 py-4" aria-label="Main navigation">
+    <div class="flex items-center justify-between md:justify-center gap-6">
+      <a class="md:hidden text-gray-900 font-bold" href="#hero" aria-label="Srushti Borate home">Srushti<span style={{ color: siteConfig.accentColor }}>.</span></a>
+      <ul class="hidden md:flex items-center gap-6 lg:gap-8 justify-center">
+        {links.map((link) => <li><a href={link.href} class="nav-link text-gray-700 hover:text-black transition-colors font-medium text-sm">{link.label}</a></li>)}
+      </ul>
+      <div class="flex items-center gap-5">
+        <button id="theme-toggle" class="text-gray-700 hover:text-black text-sm min-h-11" type="button" aria-label="Use light theme" aria-pressed="true" hidden><span aria-hidden="true">◐</span> <span data-theme-label>Light</span></button>
+        <details id="mobile-menu" class="md:hidden">
+          <summary class="text-gray-700 min-h-11 flex items-center text-sm">Menu <span class="ml-2" aria-hidden="true">☰</span></summary>
+          <ul class="absolute top-full left-4 right-4 p-5 space-y-1 bg-white border border-gray-200 rounded-xl shadow-lg">
+            {links.map((link) => <li><a href={link.href} class="block min-h-11 py-3 text-gray-700 hover:text-black font-medium">{link.label}</a></li>)}
+          </ul>
+        </details>
+      </div>
+    </div>
+  </nav>
+</header>
+<script>
+  const themeButton = document.querySelector<HTMLButtonElement>('#theme-toggle');
+  if (themeButton) {
+    const update = () => {
+      const dark = document.documentElement.dataset.theme === 'dark';
+      themeButton.setAttribute('aria-label', dark ? 'Use light theme' : 'Use dark theme');
+      themeButton.setAttribute('aria-pressed', String(dark));
+      const label = themeButton.querySelector('[data-theme-label]');
+      if (label) label.textContent = dark ? 'Light' : 'Dark';
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--paper').trim());
+    };
+    update();
+    themeButton.addEventListener('click', () => {
+      const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = theme;
+      update();
+      try { localStorage.setItem('devportfolio-theme', theme); }
+      catch (error) {
+        if (error instanceof DOMException) console.warn('Theme preference could not be saved.', error);
+        else throw error;
+      }
+    });
+    themeButton.hidden = false;
+  }
+  const menu = document.querySelector<HTMLDetailsElement>('#mobile-menu');
+  if (menu) {
+    menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => { menu.open = false; }));
+    menu.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        menu.open = false;
+        menu.querySelector('summary')?.focus();
+      }
+    });
+  }
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      const section = entries.find((entry) => entry.isIntersecting);
+      if (!section) return;
+      document.querySelectorAll<HTMLAnchorElement>('.nav-link').forEach((link) => {
+        if (link.hash === `#${section.target.id}`) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    }, { rootMargin: '-15% 0px -65% 0px' });
+    document.querySelectorAll('main section[id]').forEach((section) => observer.observe(section));
+  }
+</script>

@@ -1,0 +1,51 @@
+---
+import { siteConfig } from "../config";
+import { Image } from 'astro:assets';
+import portrait from '../assets/srushti-graduation.webp';
+---
+
+<section id="about" aria-labelledby="about-title" class="p-8 sm:p-12 md:p-16 lg:p-24">
+  <div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
+      <div class="lg:col-span-4">
+        <h2
+          id="about-title"
+          class="text-3xl sm:text-4xl md:text-5xl xl:text-7xl font-bold text-gray-900"
+        >
+          About Me
+        </h2>
+        <div
+          class="w-[75px] h-[5px] mt-2 rounded-full"
+          style={`background-color: ${siteConfig.accentColor}`}
+        >
+        </div>
+        <figure class="mt-8 max-w-sm">
+          <div class="portrait-frame border border-gray-200 p-2 bg-gray-50">
+            <Image src={portrait} alt="Srushti Borate at her IIT Roorkee graduation, with the campus building behind her" width={1200} height={1600} widths={[360, 600, 900, 1200]} sizes="(max-width: 639px) calc(100vw - 80px), (max-width: 1023px) 384px, 30vw" loading="lazy" decoding="async" />
+          </div>
+          <figcaption class="mt-4 text-xs leading-relaxed text-gray-500">IIT Roorkee graduation</figcaption>
+        </figure>
+      </div>
+
+      <div class="lg:col-span-8 space-y-8">
+        <p class="text-lg sm:text-xl md:text-2xl leading-relaxed text-gray-600">
+          {siteConfig.aboutMe}
+        </p>
+        <p class="text-lg sm:text-xl md:text-2xl leading-relaxed text-gray-600">My electrical engineering background and work in robotics gave me a starting point for thinking across boundaries. Today, I bring that perspective to software.</p>
+        <p class="personal-interests text-lg sm:text-xl md:text-2xl leading-relaxed text-gray-600">{siteConfig.personalInterests}</p>
+
+        <div class="pt-4">
+          <div class="flex flex-wrap gap-3">
+            {
+              siteConfig.skills.map((skill) => (
+                <span class="px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-100 text-gray-800 rounded-full text-sm sm:text-base md:text-lg font-medium hover:bg-gray-200 transition-colors duration-200">
+                  {skill}
+                </span>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

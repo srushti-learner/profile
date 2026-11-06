@@ -11,12 +11,12 @@ const {
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#f2efe8" />
+    <meta name="theme-color" content="#101816" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -25,10 +25,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <title>{title}</title>
     <script is:inline>
       try {
-        const preference = localStorage.getItem('portfolio-theme');
+        const preference = localStorage.getItem('devportfolio-theme');
         document.documentElement.dataset.theme = preference === 'dark' || preference === 'light'
           ? preference
-          : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          : 'dark';
       } catch (error) {
         if (error instanceof DOMException) console.warn('Theme preference could not be loaded.', error);
         else throw error;
@@ -38,42 +38,5 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <slot />
-    <script>
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-      if (!reducedMotion.matches && 'IntersectionObserver' in window) {
-        const revealObserver = new IntersectionObserver((entries, observer) => {
-          for (const entry of entries) {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('revealed');
-              observer.unobserve(entry.target);
-            }
-          }
-        }, { threshold: 0.08 });
-        document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((element) => {
-          element.classList.add('reveal-ready');
-          revealObserver.observe(element);
-        });
-        reducedMotion.addEventListener('change', () => {
-          if (reducedMotion.matches) {
-            document.querySelectorAll('.reveal-ready').forEach((element) => element.classList.add('revealed'));
-          }
-        });
-      }
-
-      const sections = document.querySelectorAll<HTMLElement>('main section[id]');
-      const links = document.querySelectorAll<HTMLAnchorElement>('.nav-link');
-      if ('IntersectionObserver' in window) {
-        const navObserver = new IntersectionObserver((entries) => {
-          const visible = entries.filter((entry) => entry.isIntersecting);
-          if (!visible.length) return;
-          const id = visible[0].target.id;
-          links.forEach((link) => {
-            if (link.hash === `#${id}`) link.setAttribute('aria-current', 'location');
-            else link.removeAttribute('aria-current');
-          });
-        }, { rootMargin: '-15% 0px -65% 0px', threshold: 0 });
-        sections.forEach((section) => navObserver.observe(section));
-      }
-    </script>
   </body>
 </html>

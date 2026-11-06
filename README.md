@@ -3,12 +3,22 @@
 A static, mobile-first Astro and TypeScript portfolio. No backend, paid service,
 external font request, or analytics is required.
 
-The original photo-led design uses oversized typography, a keyboard-accessible
-Discovery product switcher, native expandable case studies/projects, a modal
-navigation menu, and a light/dark theme saved locally in the browser. Motion is
-one-time or interaction-driven; reduced motion is respected and text is never
-hidden while waiting for a scroll animation. Without JavaScript, navigation and
-both Discovery products remain available and native disclosures still work.
+This adaptation uses the actual [DevPortfolio source by Ryan Fitzgerald](https://github.com/RyanFitzgerald/devportfolio),
+pinned at `852d650fb0a8cf0c98f874af5a56a0a9b7d7d4b7`. Its Astro components,
+grid-backed introduction, monospace typography, two-column sections, project
+cards and experience timeline form the design foundation. The original MIT
+notice is retained in `LICENSE.md`; embedded Tabler icons are covered by
+`TABLER-LICENSE.md`. Attribution also appears in the footer.
+
+Customizations include a dark-default charcoal/teal palette, optional light
+toggle, mobile navigation, founding-engineer highlight, Discovery case studies,
+full graduation photo and printable résumé. Tailwind CSS v4 is used with the
+existing Astro version. The font is a local system monospace stack.
+Dark is the default even with a light system preference or JavaScript disabled.
+An explicitly selected theme is saved under `devportfolio-theme` in local storage.
+Motion is finite, reduced motion is respected, and text is never hidden while
+waiting for animation. Without JavaScript, navigation, both Discovery products
+and native case-study disclosures remain usable.
 
 ## Local development
 
@@ -33,7 +43,9 @@ The featured Microsoft Discovery section separates public product context (linke
 Microsoft announcements and documentation) from personal engineering contributions.
 Its contribution summaries are also used by the printable résumé. Keep that
 distinction when editing; product milestones are not individual achievements.
-Intro and about copy live in `src/pages/index.astro`. The graduation portrait in
+Template configuration and About copy live in `src/config.ts`, which maps the
+shared approved data into the upstream configuration shape. Theme colors live
+in `src/styles/global.css`. The graduation portrait in
 `src/assets/srushti-graduation.webp` is an optimized, metadata-free copy of the
 complete user-provided photo, including the campus background. Astro generates
 responsive image sizes; explicit dimensions reserve space to prevent layout shift.
@@ -56,7 +68,7 @@ npm test
 
 The browser suite checks the production site at desktop and mobile sizes,
 keyboard navigation, anchors, case studies, résumé printing, reduced motion,
-JavaScript-disabled content, theme persistence, the menu and product switcher,
+JavaScript-disabled content, dark default, theme persistence, the mobile menu,
 uncropped photo proportions, and automated accessibility. Screenshots are saved
 under `test-results/` (or `PORTFOLIO_SCREENSHOT_DIR` when set).
 
