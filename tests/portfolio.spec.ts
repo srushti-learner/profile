@@ -175,7 +175,7 @@ test('Discovery separates both products, personal contributions and public sourc
   ]);
   await expect(app.locator('.product-context')).toContainText('desktop experience');
   await expect(app.locator('.contributions li')).toHaveText([
-    'Cross-platform AI desktop delivery', 'MCP developer tooling', 'Provider-aware telemetry',
+    'Worked on cross-platform delivery across four runtime targets: Windows x64, Windows ARM64, macOS Apple Silicon, and RHEL Linux.', 'MCP developer tooling', 'Provider-aware telemetry',
   ]);
   for (const product of [platform, app]) {
     await expect(product.getByRole('link', { name: /product overview/ })).toHaveAttribute('href', 'https://learn.microsoft.com/en-us/azure/microsoft-discovery/concept-discovery-and-discovery-app');
@@ -341,6 +341,7 @@ test('public photo-free résumé, print action, local assets and no page errors'
   await expect(page.getByRole('heading', { name: 'Microsoft Discovery App', exact: true })).toBeVisible();
   await expect(page.locator('.resume-highlight').first()).toContainText('Admin APIs for privileged operational access');
   await expect(page.locator('.resume-highlight').last()).toContainText(/provider-aware telemetry/i);
+  await expect(page.locator('.resume-highlight').last()).toContainText('four runtime targets: Windows x64, Windows ARM64, macOS Apple Silicon, and RHEL Linux');
   await page.evaluate(() => { window.print = () => document.body.setAttribute('data-print-called', 'true'); });
   await page.getByRole('button', { name: 'Print / Save PDF' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-print-called', 'true');
