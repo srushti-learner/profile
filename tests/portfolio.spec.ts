@@ -10,6 +10,8 @@ test('desktop content, navigation, case studies and accessibility', async ({ pag
   await page.goto('./');
   await expect(page).toHaveTitle('Srushti Borate — Software Engineer');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Thoughtful code.Real-world impact.');
+  await expect(page.locator('.hero .founding-role')).toBeInViewport({ ratio: 1 });
+  expect(await page.locator('.hero .founding-role').evaluate((element) => parseFloat(getComputedStyle(element).fontSize))).toBeGreaterThanOrEqual(28);
   await page.keyboard.press('Tab');
   await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused();
   await page.keyboard.press('Enter');
@@ -45,9 +47,9 @@ test('desktop content, navigation, case studies and accessibility', async ({ pag
 test('Discovery highlights separate product context from personal contributions', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('./');
-  await expect(page.locator('.hero-description')).toContainText('Microsoft Discovery');
-  await expect(page.locator('.hero-description .founding-role')).toHaveText('One of the founding engineers of Microsoft Discovery.');
-  await expect(page.locator('#work .section-heading')).toContainText('One of the founding engineers of Microsoft Discovery.');
+  await expect(page.locator('.hero .founding-role')).toHaveText('One of the founding engineers of Microsoft Discovery.');
+  await expect(page.locator('.hero .founding-role')).toHaveCSS('background-color', 'rgb(40, 89, 79)');
+  await expect(page.locator('#work .section-heading')).toContainText('My work as a founding engineer.');
   await expect(page.locator('.hero .eyebrow')).toHaveText('SOFTWARE ENGINEER AT MICROSOFT');
   await expect(page.locator('.build-highlight')).toContainText('ANNOUNCED AT MICROSOFT BUILD');
   const platform = page.getByRole('article', { name: 'Microsoft Discovery', exact: true });
@@ -77,6 +79,8 @@ test('mobile layout, navigation and accessibility', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('./');
+  await expect(page.locator('.hero .founding-role')).toBeInViewport({ ratio: 1 });
+  expect(await page.locator('.hero .founding-role').evaluate((element) => parseFloat(getComputedStyle(element).fontSize))).toBeGreaterThanOrEqual(22);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.getByRole('link', { name: 'About', exact: true }).click();
   await expect(page).toHaveURL(/#about$/);
@@ -86,6 +90,7 @@ test('mobile layout, navigation and accessibility', async ({ page }) => {
   await mkdir(screenshotDir, { recursive: true });
   await page.screenshot({ path: path.join(screenshotDir, 'portfolio-mobile.png'), fullPage: true });
   await page.setViewportSize({ width: 320, height: 720 });
+  await expect(page.locator('.hero .founding-role')).toBeInViewport({ ratio: 1 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
 
